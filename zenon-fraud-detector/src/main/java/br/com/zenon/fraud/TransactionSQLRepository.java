@@ -6,14 +6,36 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionSQLRepository implements TransactionRepository{
-    public void insertNewTransaction(Transaction transaction){
+    public boolean insertNewTransaction(Transaction transaction) {
         String sql = """
                 INSERT INTO zenon_frauds.transactions
-                (id, step, `type`, amount, name_origin, old_balance_origin, new_balance_origin, name_recipient, old_balance_recipient, new_balance_recipient, is_fraud, is_flagged_fraud)
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                (step, `type`, amount, name_origin, old_balance_origin, new_balance_origin, name_recipient, old_balance_recipient, new_balance_recipient, is_fraud, is_flagged_fraud)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """;
 
-        
+        try(
+                Connection conn = ConnectionFactory.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+                ){
+            ps.setString(1, String.valueOf(transaction.step()));
+            ps.setString(2, transaction.transationType().name());
+            ps.setString(3, transaction.amount().toString());
+            ps.setString(4, transaction.origin().name());
+            ps.setString(5, transaction.origin().oldBalance().toString());
+            ps.setString(6, transaction.origin().newBalance().toString());
+            ps.setString(7, transaction.destin().name());
+            ps.setString(8, transaction.destin().oldBalance().toString());
+            ps.setString(9, transaction.destin().newBalance().toString());
+            ps.setString(10, transaction.isFraud() ? "1" : "0");
+            ps.setString(11, transaction.isFlaggedFraud()?"1":"0");
+            
+            ps.executeUpdate();
+
+            System.out.println("Transação inserida com sucesso!:" + transaction);
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
