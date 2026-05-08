@@ -1,5 +1,6 @@
 package br.com.zenon.fraud;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -58,14 +59,32 @@ public class TransactionSQLRepository implements TransactionRepository{
                     System.out.println("Nenhum resultado encontrado: " + originName);
                     return Optional.empty();
                 }
-                IO.println(rs.getString("name_origin"));
-            }
 
+                int step = rs.getInt("step");
+                TransactionType type = TransactionType.valueOf(rs.getString("type"));
+                BigDecimal amount = new BigDecimal(rs.getString("amount"));
+
+                TransactionCustomer origin = new TransactionCustomer(
+                        rs.getString("name_origin"),
+                        new BigDecimal(rs.getString("old_balance_origin")),
+                        new BigDecimal(rs.getString("new_balance_origin"))
+                );
+
+                TransactionCustomer destin = new TransactionCustomer(
+                        rs.getString("name_recipient"),
+                        new BigDecimal(rs.getString("old_balance_recipient")),
+                        new BigDecimal(rs.getString("new_balance_recipient"))
+                );
+
+                boolean isFraud = "1".equals(rs.getString("is_fraud"));
+                boolean isFlaggedFraud = "1".equals(rs.getString("is_flagged_fraud"));
+
+                return Optional.of(new Transaction(step, type, amount, origin, destin, isFraud, isFlaggedFraud));
+            }
 
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty();
     }
 }

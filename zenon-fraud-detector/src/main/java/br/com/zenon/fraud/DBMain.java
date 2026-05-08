@@ -8,9 +8,9 @@ public class DBMain {
     static void main() {
         String arquivo = "PS_20174392719_1491204439457_log.csv";
         TransactionIngestor transactionIngestor = new TransactionIngestor();
-        List<Transaction> transactionsList = transactionIngestor.read(arquivo);
         TransactionSQLRepository transactionSQLRepository = new TransactionSQLRepository();
 
+//        List<Transaction> transactionsList = transactionIngestor.read(arquivo);
         /*
         System.out.println("=========================");
         System.out.println("Inserção no DB");
@@ -22,10 +22,10 @@ public class DBMain {
 
         System.out.println("=========================");
         System.out.println("Consulta no DB");
+        String originName = "aaa";
 
-        Optional<Transaction> consultaTransaction = transactionSQLRepository.findTransactionByOriginName("C1231006815");
-        System.out.println(consultaTransaction.get());
-
+        Optional<Transaction> consultaTransaction = transactionSQLRepository.findTransactionByOriginName(originName);
+        consultaTransaction.ifPresent(System.out::println);
 
 
     }
