@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionSQLRepository implements TransactionRepository{
-    public boolean insertNewTransaction(Transaction transaction) {
+    @Override
+    public boolean save(Transaction transaction) {
         String sql = """
                 INSERT INTO zenon_frauds.transactions
                 (step, `type`, amount, name_origin, old_balance_origin, new_balance_origin, name_recipient, old_balance_recipient, new_balance_recipient, is_fraud, is_flagged_fraud)
