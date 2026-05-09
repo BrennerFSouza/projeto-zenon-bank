@@ -10,23 +10,30 @@ public class DBMain {
         TransactionIngestor transactionIngestor = new TransactionIngestor();
         TransactionSQLRepository transactionSQLRepository = new TransactionSQLRepository();
 
-//        List<Transaction> transactionsList = transactionIngestor.read(arquivo);
-        /*
+        String originName;
+        Optional<Transaction> consultaTransaction;
+        List<Transaction> transactionsList = transactionIngestor.read(arquivo);
         System.out.println("=========================");
         System.out.println("Inserção no DB");
 
-        Transaction transaction1 = transactionsList.get(0);
+        Transaction transaction;
+        long timeBefore;
+        long timeAfter;
+        timeBefore = System.nanoTime();
+        transactionsList.forEach(transactionSQLRepository::save);
+        timeAfter = System.nanoTime();
 
-        transactionSQLRepository.insertNewTransaction(transaction1);
-        */
+        System.out.println("Tempo de Execução: " + (timeAfter - timeBefore) / 1000000 + "ms");
 
         System.out.println("=========================");
         System.out.println("Consulta no DB");
-        String originName = "aaa";
 
-        Optional<Transaction> consultaTransaction = transactionSQLRepository.findTransactionByOriginName(originName);
+        originName = "C1231006815";
+        consultaTransaction = transactionSQLRepository.findTransactionByOriginName(originName);
         consultaTransaction.ifPresent(System.out::println);
-
+        originName = "C12345";
+        consultaTransaction = transactionSQLRepository.findTransactionByOriginName(originName);
+        consultaTransaction.ifPresent(System.out::println);
 
     }
 }

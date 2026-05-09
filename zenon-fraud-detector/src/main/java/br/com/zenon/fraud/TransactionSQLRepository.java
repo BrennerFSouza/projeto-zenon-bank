@@ -33,7 +33,7 @@ public class TransactionSQLRepository implements TransactionRepository{
             
             ps.executeUpdate();
 
-            System.out.println("Transação inserida com sucesso!:" + transaction);
+//            System.out.println("Transação inserida com sucesso!:" + transaction);
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
